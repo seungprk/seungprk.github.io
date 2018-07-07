@@ -25,4 +25,3 @@ class CanvasRenderer extends React.Component {
 }
 
 export default CanvasRenderer;
-
