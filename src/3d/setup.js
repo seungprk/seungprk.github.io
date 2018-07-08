@@ -6,12 +6,15 @@ const createSphere = (radius, pos) => {
   const sphere = new THREE.Mesh(geometry, material);
   sphere.position.copy(pos);
 
-  return sphere;
+  const parent = new THREE.Object3D();
+  parent.add(sphere);
+
+  return parent;
 };
 
-const orbit = (sphere, radius, angle) => {
-  sphere.position.x = Math.cos(angle) * radius;
-  sphere.position.y = Math.sin(angle) * radius;
+const orbit = (sphere, angle, orbitOffsetAngle) => {
+  sphere.rotation.y = angle;
+  sphere.rotation.z = Math.cos(angle) * orbitOffsetAngle;
 };
 
 const setup = (canvas) => {
@@ -40,9 +43,9 @@ const setup = (canvas) => {
   const animate = () => {
     requestAnimationFrame(animate);
     this.renderer.render(this.scene, this.camera);
-    orbit(planet1, 15, angle);
-    orbit(planet2, 25, angle);
-    orbit(planet3, 35, angle);
+    orbit(planet1, angle, Math.PI / 8);
+    orbit(planet2, angle, Math.PI / 16);
+    orbit(planet3, angle, -Math.PI / 10);
     angle += Math.PI / 360;
   };
   animate();
