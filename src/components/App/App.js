@@ -16,8 +16,6 @@ class App extends React.Component {
   }
 
   handleKey(e) {
-    e.preventDefault();
-
     let { pageNum } = this.state;
     const max = pages.length - 1;
 
