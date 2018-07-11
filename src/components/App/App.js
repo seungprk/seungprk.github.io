@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from '../Modal/Modal';
 import CanvasRenderer from '../CanvasRenderer/CanvasRenderer';
 import pages from '../../pages/pages';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends React.Component {
