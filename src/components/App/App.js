@@ -39,12 +39,6 @@ class App extends React.Component {
     const { pageNum } = this.state;
     return (
       <div className="App">
-        <header className="header">
-          <img src={logo} className="logo" alt="logo" />
-          <div className="title">
-            david park
-          </div>
-        </header>
         <Modal>
           {pages[pageNum]}
         </Modal>
