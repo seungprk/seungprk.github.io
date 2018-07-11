@@ -1,17 +1,12 @@
 .skills {
   display: inline-block;
-  position: relative;
   margin: 1rem;
-  padding: 1.5rem 0.5rem 0.5rem 0.5rem;
-  border-top: 1px solid white;
 }
 
 .skills__title {
-  position: absolute;
-  top: -0.7rem;
-  padding: 0.2rem;
-  background-color: white;
-  color: black;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid white;
+  color: white;
 }
 
 .skills__item {
