@@ -1,10 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './Modal.css';
 
-const Modal = (props) => (
+const Modal = ({ children }) => (
   <div className="Modal">
-    {props.children}
+    <div className="Modal__box">
+      {children}
+    </div>
   </div>
 );
+
+Modal.propTypes = {
+  children: PropTypes.element.isRequired,
+};
 
 export default Modal;
