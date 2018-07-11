@@ -1,0 +1,9 @@
+.icon {
+  width: 2rem;
+  margin-right: 1rem;
+  fill: white;
+}
+
+.icon:hover {
+  fill: #007AFF;
+}
