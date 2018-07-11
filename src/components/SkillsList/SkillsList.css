@@ -1,0 +1,23 @@
+.skills {
+  display: inline-block;
+  position: relative;
+  margin: 0.5rem;
+  padding: 1.5rem 0.5rem 0.5rem 0.5rem;
+  border-top: 1px solid white;
+}
+
+.skills__title {
+  position: absolute;
+  top: -0.7rem;
+  padding: 0.2rem;
+  background-color: white;
+  color: black;
+}
+
+.skills__item {
+  display: inline-block;
+  margin: 0.25em;
+  padding: 0.25em;
+  border: 1px solid white;
+  border-radius: 0.5em;
+}
