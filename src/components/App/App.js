@@ -19,6 +19,10 @@ class App extends React.Component {
     document.addEventListener('keydown', this.handleKey);
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKey);
+  }
+
   handleKey(e) {
     let { pageNum } = this.state;
     const max = pages.length - 1;
