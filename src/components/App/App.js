@@ -15,6 +15,10 @@ class App extends React.Component {
     this.handleKey = this.handleKey.bind(this);
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKey);
+  }
+
   handleKey(e) {
     let { pageNum } = this.state;
     const max = pages.length - 1;
@@ -30,12 +34,12 @@ class App extends React.Component {
   render() {
     const { pageNum } = this.state;
     return (
-      <div className="App" onKeyDown={this.handleKey} tabIndex="0">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">
-            Welcome to React
-          </h1>
+      <div className="App">
+        <header className="header">
+          <img src={logo} className="logo" alt="logo" />
+          <div className="title">
+            david park
+          </div>
         </header>
         <Modal>
           {pages[pageNum]}
