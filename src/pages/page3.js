@@ -1,13 +1,16 @@
 import React from 'react';
+import ProjectItem from '../components/ProjectItem/ProjectItem';
 
 const projects = [
   {
-    name: 'Test Project 1',
-    content: 'lorem ipsum...',
+    name: 'CryptoCharts',
+    content: 'Dashboard for Cryptocurrencies (React + Redux)',
+    link: 'https://github.com/seungprk/crypto-charts',
   },
   {
-    name: 'Test Project 1',
-    content: 'lorem ipsum...',
+    name: 'Dashing Dynamics',
+    content: 'Infinite runner/platformer game on iOS App Store',
+    link: 'https://itunes.apple.com/us/app/dashing-dynamics/id1253316480',
   },
 ];
 
@@ -17,14 +20,11 @@ export default (
       projects
     </h1>
     {projects.map(project => (
-      <div>
-        <h5>
-          {project.name}
-        </h5>
-        <p>
-          {project.content}
-        </p>
-      </div>
+      <ProjectItem
+        name={project.name}
+        link={project.link}
+        content={project.content}
+      />
     ))}
   </div>
 );
