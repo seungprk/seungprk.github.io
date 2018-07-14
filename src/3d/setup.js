@@ -49,9 +49,13 @@ const setup = (canvas) => {
   });
   const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
   const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
-  fadeMesh.position.z = camera.position.z - 1;
+  fadeMesh.position.z = -0.1;
   fadeMesh.renderOrder = -1;
-  scene.add(fadeMesh);
+
+  const camGroup = new THREE.Group();
+  camGroup.add(camera);
+  camGroup.add(fadeMesh);
+  scene.add(camGroup);
 
   // Add spheres
   const sun = createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0);
@@ -78,7 +82,6 @@ const setup = (canvas) => {
   animate();
 
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
-
 };
 
 export default setup;
