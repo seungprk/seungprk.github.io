@@ -45,7 +45,7 @@ const setup = (canvas) => {
   const fadeMaterial = new THREE.MeshBasicMaterial({
     color: 0x000000,
     transparent: true,
-    opacity: 0.05,
+    opacity: 0.1,
   });
   const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
   const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
