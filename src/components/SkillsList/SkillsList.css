@@ -1,0 +1,22 @@
+.skills {
+  margin: 1rem 0;
+}
+
+.skills__title {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid white;
+  color: white;
+}
+
+.skills__item {
+  display: inline-block;
+  margin: 0.25em;
+  padding: 0.25em;
+  border: 1px solid white;
+  border-radius: 0.5em;
+}
+
+.skills__item:hover {
+  color: #007AFF;
+  border-color: #007AFF;
+}

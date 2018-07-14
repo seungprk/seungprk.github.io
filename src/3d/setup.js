@@ -17,38 +17,46 @@ const orbit = (sphere, angle, orbitOffsetAngle) => {
   sphere.rotation.z = Math.cos(angle) * orbitOffsetAngle;
 };
 
+const onWindowResize = (camera, renderer) => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+};
+
 const setup = (canvas) => {
-  this.camera = new THREE.PerspectiveCamera(
+  const camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
     1,
     1000,
   );
-  this.camera.position.z = 100;
-  this.scene = new THREE.Scene();
+  camera.position.z = 100;
+  const scene = new THREE.Scene();
 
-  this.renderer = new THREE.WebGLRenderer({ canvas });
-  this.renderer.setSize(window.innerWidth, window.innerHeight);
+  const renderer = new THREE.WebGLRenderer({ canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   const sun = createSphere(5, new THREE.Vector3(0, 0, 0));
   const planet1 = createSphere(1, new THREE.Vector3(15, 0, 0));
   const planet2 = createSphere(1, new THREE.Vector3(25, 0, 0));
   const planet3 = createSphere(1, new THREE.Vector3(35, 0, 0));
-  this.scene.add(sun);
-  this.scene.add(planet1);
-  this.scene.add(planet2);
-  this.scene.add(planet3);
+  scene.add(sun);
+  scene.add(planet1);
+  scene.add(planet2);
+  scene.add(planet3);
 
   let angle = 0;
   const animate = () => {
     requestAnimationFrame(animate);
-    this.renderer.render(this.scene, this.camera);
+    renderer.render(scene, camera);
     orbit(planet1, angle, Math.PI / 8);
     orbit(planet2, angle, Math.PI / 16);
     orbit(planet3, angle, -Math.PI / 10);
     angle += Math.PI / 360;
   };
   animate();
+
+  window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
 };
 
 export default setup;

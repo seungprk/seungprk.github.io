@@ -1,0 +1,13 @@
+.self-description {
+  margin: 0.5em 0;
+}
+
+.icon {
+  width: 2rem;
+  margin-right: 1rem;
+  fill: white;
+}
+
+.icon:hover {
+  fill: #007AFF;
+}

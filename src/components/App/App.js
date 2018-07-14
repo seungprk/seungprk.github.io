@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from '../Modal/Modal';
 import CanvasRenderer from '../CanvasRenderer/CanvasRenderer';
 import pages from '../../pages/pages';
-import logo from './logo.svg';
 import './App.css';
 
 class App extends React.Component {
@@ -13,6 +12,14 @@ class App extends React.Component {
     };
 
     this.handleKey = this.handleKey.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener('keydown', this.handleKey);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKey);
   }
 
   handleKey(e) {
@@ -30,13 +37,7 @@ class App extends React.Component {
   render() {
     const { pageNum } = this.state;
     return (
-      <div className="App" onKeyDown={this.handleKey} tabIndex="0">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">
-            Welcome to React
-          </h1>
-        </header>
+      <div className="App">
         <Modal>
           {pages[pageNum]}
         </Modal>

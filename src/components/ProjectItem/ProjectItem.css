@@ -1,0 +1,25 @@
+.project {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.project__name {
+  margin-bottom: 0.25em;
+  padding: 0.25em;
+  font-weight: bold;
+  color: inherit;
+  text-decoration: none;
+  border: 1px solid white;
+  border-radius: 0.5em;
+}
+
+.project__name:hover {
+  color: #007AFF;
+  border-color: #007AFF;
+}
+
+.project__content {
+  margin-left: 0.25em;
+}
