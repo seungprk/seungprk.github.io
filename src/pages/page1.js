@@ -11,7 +11,18 @@ export default (
     </h1>
     <h5>
       <em>
-        software engineer
+        <div className="self-description">
+          Software Engineer. Vim enthusiast.
+        </div>
+        <div className="self-description">
+          Believer in the future of AR/VR.
+        </div>
+        <div className="self-description">
+          Pretends to know a little about philosophy.
+        </div>
+        <div className="self-description">
+          Baby talks to his dog too much.
+        </div>
       </em>
     </h5>
     <a href="https://github.com/seungprk" target="_blank" rel="noopener noreferrer">
