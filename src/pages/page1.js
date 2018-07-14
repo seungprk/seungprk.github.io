@@ -18,7 +18,7 @@ export default (
           Believer in the future of AR/VR.
         </div>
         <div className="self-description">
-          Pretends to know a little about philosophy.
+          Pretends to know a little philosophy.
         </div>
         <div className="self-description">
           Baby talks to his dog too much.

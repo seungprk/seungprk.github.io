@@ -27,29 +27,45 @@ const onWindowResize = (camera, renderer) => {
 };
 
 const setup = (canvas) => {
+  // Scene, camera, renderer
+  const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
     1,
     1000,
   );
-  const scene = new THREE.Scene();
+  camera.position.z = 100;
 
-  const renderer = new THREE.WebGLRenderer({ canvas });
+  const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true });
+  renderer.autoClearColor = false;
   renderer.setSize(window.innerWidth, window.innerHeight);
 
+  // Transparent plane for fading
+  const fadeMaterial = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    opacity: 0.05,
+  });
+  const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
+  const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
+  fadeMesh.position.z = camera.position.z - 1;
+  fadeMesh.renderOrder = -1;
+  scene.add(fadeMesh);
+
+  // Add spheres
   const sun = createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0);
-  const planet1 = createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 4, 3000);
-  const planet2 = createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 8, 5000);
-  const planet3 = createSphere(1, new THREE.Vector3(35, 0, 0), 0, 7000);
+  const planet1 = createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 6, 5000);
+  const planet2 = createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 8, 7000);
+  const planet3 = createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000);
+  const planet4 = createSphere(1, new THREE.Vector3(45, 0, 0), Math.PI / 32, 11000);
   scene.add(sun);
   scene.add(planet1);
   scene.add(planet2);
   scene.add(planet3);
+  scene.add(planet4);
 
-  camera.position.z = 100;
-  camera.lookAt(sun.position);
-
+  // Animation and resize
   const animate = (time) => {
     TWEEN.update(time);
     requestAnimationFrame(animate);
@@ -58,6 +74,7 @@ const setup = (canvas) => {
   animate();
 
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
+
 };
 
 export default setup;
