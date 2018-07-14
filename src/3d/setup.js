@@ -56,14 +56,18 @@ const setup = (canvas) => {
   // Add spheres
   const sun = createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0);
   const planet1 = createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 6, 5000);
-  const planet2 = createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 8, 7000);
-  const planet3 = createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000);
-  const planet4 = createSphere(1, new THREE.Vector3(45, 0, 0), Math.PI / 32, 11000);
+  const planet2 = createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 8, 6000);
+  const planet3 = createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 4, 7000);
+  const planet4 = createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 8, 8000);
+  const planet5 = createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000);
+  const planet6 = createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000);
   scene.add(sun);
   scene.add(planet1);
   scene.add(planet2);
   scene.add(planet3);
   scene.add(planet4);
+  scene.add(planet5);
+  scene.add(planet6);
 
   // Animation and resize
   const animate = (time) => {
