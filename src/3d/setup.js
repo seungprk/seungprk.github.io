@@ -73,12 +73,33 @@ const setup = (canvas) => {
   scene.add(planet6);
 
   // Animation and resize
+  let setCameraPos = () => {};
   const animate = (time) => {
     TWEEN.update(time);
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
+    setCameraPos();
   };
   animate();
+
+  // Tween track code
+  const planet4Vector = new THREE.Vector3();
+  const tween = new TWEEN.Tween(camera.position);
+  tween.to(planet4Vector, 3000)
+    .onUpdate(() => {
+      planet4.children[0].getWorldPosition(planet4Vector);
+      planet4Vector.z += 10;
+      planet4Vector.y += 10;
+    })
+    .onComplete(() => {
+      setCameraPos = () => {
+        planet4.children[0].getWorldPosition(planet4Vector);
+        planet4Vector.z += 10;
+        planet4Vector.y += 10;
+        camera.position.copy(planet4Vector);
+      };
+    })
+    .start();
 
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
 };
