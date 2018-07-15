@@ -1,5 +1,8 @@
+/* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
+
+const initialCamPos = new THREE.Vector3(0, 100, 100);
 
 const createSphere = (radius, pos, tilt, orbitDuration) => {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);
@@ -35,8 +38,7 @@ const setup = (canvas) => {
     1,
     1000,
   );
-  camera.position.z = 100;
-  camera.position.y = 100;
+  camera.position.copy(initialCamPos);
   camera.lookAt(scene.position);
 
   const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true });
@@ -70,27 +72,31 @@ const setup = (canvas) => {
 
   // Animation and resize
   let setCameraPos;
+  let transitionGroup;
   const animate = (time) => {
     TWEEN.update(time);
-    requestAnimationFrame(animate);
-    renderer.render(scene, camera);
+    if (transitionGroup) transitionGroup.update(time);
     if (setCameraPos) setCameraPos();
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(animate);
   };
   animate();
 
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
 
   // Sphere Transition
-  let transitionTween;
   return (sphereIndex) => {
     setCameraPos = null;
-    if (transitionTween) TWEEN.remove(transitionTween);
+    if (transitionGroup) transitionGroup.removeAll();
 
     const sphere = spheres[sphereIndex];
     const sphereWorldVector = new THREE.Vector3();
 
-    transitionTween = new TWEEN.Tween(camera.position);
-    transitionTween.to(sphereWorldVector, 3000)
+    transitionGroup = new TWEEN.Group();
+
+    const followZoom = new TWEEN.Tween(camera.position, transitionGroup);
+    followZoom.to(sphereWorldVector, 3000)
       .onUpdate(() => {
         sphere.children[0].getWorldPosition(sphereWorldVector);
         sphereWorldVector.z += 10;
@@ -103,7 +109,11 @@ const setup = (canvas) => {
           sphereWorldVector.y += 10;
           camera.position.copy(sphereWorldVector);
         };
-      })
+      });
+
+    const showOverview = new TWEEN.Tween(camera.position, transitionGroup);
+    showOverview.to(initialCamPos, 3000)
+      .chain(followZoom)
       .start();
   };
 };
