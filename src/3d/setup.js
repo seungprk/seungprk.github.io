@@ -57,20 +57,16 @@ const setup = (canvas) => {
   scene.add(camera);
 
   // Add spheres
-  const sun = createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0);
-  const planet1 = createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 6, 5000);
-  const planet2 = createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 8, 6000);
-  const planet3 = createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 4, 7000);
-  const planet4 = createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 8, 8000);
-  const planet5 = createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000);
-  const planet6 = createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000);
-  scene.add(sun);
-  scene.add(planet1);
-  scene.add(planet2);
-  scene.add(planet3);
-  scene.add(planet4);
-  scene.add(planet5);
-  scene.add(planet6);
+  const spheres = [
+    createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0),
+    createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 6, 5000),
+    createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 8, 6000),
+    createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 4, 7000),
+    createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 8, 8000),
+    createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000),
+    createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000),
+  ];
+  spheres.forEach(planet => scene.add(planet));
 
   // Animation and resize
   let setCameraPos = () => {};
@@ -82,26 +78,29 @@ const setup = (canvas) => {
   };
   animate();
 
-  // Tween track code
-  const planet4Vector = new THREE.Vector3();
-  const tween = new TWEEN.Tween(camera.position);
-  tween.to(planet4Vector, 3000)
-    .onUpdate(() => {
-      planet4.children[0].getWorldPosition(planet4Vector);
-      planet4Vector.z += 10;
-      planet4Vector.y += 10;
-    })
-    .onComplete(() => {
-      setCameraPos = () => {
-        planet4.children[0].getWorldPosition(planet4Vector);
-        planet4Vector.z += 10;
-        planet4Vector.y += 10;
-        camera.position.copy(planet4Vector);
-      };
-    })
-    .start();
-
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
+
+  // Sphere Transition
+  return (sphereIndex) => {
+    const sphere = spheres[sphereIndex];
+    const sphereWorldVector = new THREE.Vector3();
+    const tween = new TWEEN.Tween(camera.position);
+    tween.to(sphereWorldVector, 3000)
+      .onUpdate(() => {
+        sphere.children[0].getWorldPosition(sphereWorldVector);
+        sphereWorldVector.z += 10;
+        sphereWorldVector.y += 10;
+      })
+      .onComplete(() => {
+        setCameraPos = () => {
+          sphere.children[0].getWorldPosition(sphereWorldVector);
+          sphereWorldVector.z += 10;
+          sphereWorldVector.y += 10;
+          camera.position.copy(sphereWorldVector);
+        };
+      })
+      .start();
+  };
 };
 
 export default setup;
