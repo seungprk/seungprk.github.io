@@ -97,7 +97,7 @@ const setup = (canvas) => {
 
     const followZoom = new TWEEN.Tween(camera.position, transitionGroup);
     followZoom.easing(TWEEN.Easing.Quadratic.InOut);
-    followZoom.to(sphereWorldVector, 3000)
+    followZoom.to(sphereWorldVector, 2000)
       .onUpdate(() => {
         sphere.children[0].getWorldPosition(sphereWorldVector);
         sphereWorldVector.z += 10;
@@ -114,7 +114,7 @@ const setup = (canvas) => {
 
     const showOverview = new TWEEN.Tween(camera.position, transitionGroup);
     showOverview.easing(TWEEN.Easing.Quadratic.InOut);
-    showOverview.to(initialCamPos, 3000)
+    showOverview.to(initialCamPos, 1000)
       .chain(followZoom)
       .start();
   };
