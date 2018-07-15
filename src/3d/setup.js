@@ -69,23 +69,28 @@ const setup = (canvas) => {
   spheres.forEach(planet => scene.add(planet));
 
   // Animation and resize
-  let setCameraPos = () => {};
+  let setCameraPos;
   const animate = (time) => {
     TWEEN.update(time);
     requestAnimationFrame(animate);
     renderer.render(scene, camera);
-    setCameraPos();
+    if (setCameraPos) setCameraPos();
   };
   animate();
 
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
 
   // Sphere Transition
+  let transitionTween;
   return (sphereIndex) => {
+    setCameraPos = null;
+    if (transitionTween) TWEEN.remove(transitionTween);
+
     const sphere = spheres[sphereIndex];
     const sphereWorldVector = new THREE.Vector3();
-    const tween = new TWEEN.Tween(camera.position);
-    tween.to(sphereWorldVector, 3000)
+
+    transitionTween = new TWEEN.Tween(camera.position);
+    transitionTween.to(sphereWorldVector, 3000)
       .onUpdate(() => {
         sphere.children[0].getWorldPosition(sphereWorldVector);
         sphereWorldVector.z += 10;
