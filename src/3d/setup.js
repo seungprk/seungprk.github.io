@@ -36,6 +36,8 @@ const setup = (canvas) => {
     1000,
   );
   camera.position.z = 100;
+  camera.position.y = 100;
+  camera.lookAt(scene.position);
 
   const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true });
   renderer.autoClearColor = false;
@@ -49,13 +51,10 @@ const setup = (canvas) => {
   });
   const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
   const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
-  fadeMesh.position.z = -0.1;
+  fadeMesh.position.z = -1;
   fadeMesh.renderOrder = -1;
-
-  const camGroup = new THREE.Group();
-  camGroup.add(camera);
-  camGroup.add(fadeMesh);
-  scene.add(camGroup);
+  camera.add(fadeMesh);
+  scene.add(camera);
 
   // Add spheres
   const sun = createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0);
