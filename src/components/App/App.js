@@ -1,6 +1,7 @@
 import React from 'react';
 import Modal from '../Modal/Modal';
 import CanvasRenderer from '../CanvasRenderer/CanvasRenderer';
+import Arrows from '../Arrows/Arrows';
 import pages from '../../pages/pages';
 import './App.css';
 
@@ -39,6 +40,7 @@ class App extends React.Component {
       <div className="App">
         <Modal pageNum={pageNum} />
         <CanvasRenderer pageNum={pageNum} />
+        <Arrows pageNum={pageNum} max={pages.length - 1} />
       </div>
     );
   }
