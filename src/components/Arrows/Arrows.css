@@ -15,6 +15,15 @@
   cursor: pointer;
 }
 
+.Arrows__icon-wrapper--hidden {
+  cursor: initial;
+}
+
+.Arrows__icon-wrapper--hidden:focus {
+  outline: none;
+  cursor: initial;
+}
+
 .Arrows__icon {
   width: 2rem;
 }

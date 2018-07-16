@@ -10,16 +10,20 @@ const Arrows = ({
   handlePageDown,
   handlePageUp,
 }) => {
+  let upWrapClass = 'Arrows__icon-wrapper';
   let upClass = 'Arrows__icon';
   let upTabIndex = 0;
   if (pageNum === 0) {
+    upWrapClass += ' Arrows__icon-wrapper--hidden';
     upClass += ' Arrows__icon--hidden';
     upTabIndex = -1;
   }
 
+  let downWrapClass = 'Arrows__icon-wrapper';
   let downClass = 'Arrows__icon';
   let downTabIndex = 0;
   if (pageNum === max) {
+    downWrapClass += ' Arrows__icon-wrapper--hidden';
     downClass += ' Arrows__icon--hidden';
     downTabIndex = -1;
   }
@@ -34,7 +38,7 @@ const Arrows = ({
   return (
     <div className="Arrows">
       <div
-        className="Arrows__icon-wrapper"
+        className={upWrapClass}
         onClick={handlePageUp}
         role="button"
         onKeyDown={handleKeyForPageUp}
@@ -43,7 +47,7 @@ const Arrows = ({
         <img className={upClass} src={upIcon} alt="Up" />
       </div>
       <div
-        className="Arrows__icon-wrapper"
+        className={downWrapClass}
         onClick={handlePageDown}
         role="button"
         onKeyDown={handleKeyForPageDown}
