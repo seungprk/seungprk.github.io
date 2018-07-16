@@ -17,6 +17,8 @@ class App extends React.Component {
       },
     };
 
+    this.movePageDown = this.movePageDown.bind(this);
+    this.movePageUp = this.movePageUp.bind(this);
     this.handleKey = this.handleKey.bind(this);
     this.handleTouchStart = this.handleTouchStart.bind(this);
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
@@ -82,7 +84,12 @@ class App extends React.Component {
       >
         <Modal pageNum={pageNum} />
         <CanvasRenderer pageNum={pageNum} />
-        <Arrows pageNum={pageNum} max={pages.length - 1} />
+        <Arrows
+          pageNum={pageNum}
+          max={pages.length - 1}
+          handlePageDown={this.movePageDown}
+          handlePageUp={this.movePageUp}
+        />
       </div>
     );
   }

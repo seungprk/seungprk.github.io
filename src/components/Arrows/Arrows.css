@@ -10,8 +10,11 @@
   height: 100%;
 }
 
+.Arrows__icon-wrapper {
+  margin: 1rem;
+}
+
 .Arrows__icon {
-  padding: 1rem;
   width: 2rem;
 }
 
