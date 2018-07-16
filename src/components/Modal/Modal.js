@@ -18,8 +18,9 @@ class Modal extends React.Component {
     const { pageNum } = this.props;
     if (prevProps.pageNum !== pageNum) {
       this.setState({ hidden: true }, () => {
-        findDOMNode(this).offsetHeight
-        setTimeout(() => this.setState({ hidden: false }), 3000);
+        clearTimeout(this.timeoutId);
+        findDOMNode(this).offsetHeight;
+        this.timeoutId = setTimeout(() => this.setState({ hidden: false }), 3000);
       });
     }
   }
