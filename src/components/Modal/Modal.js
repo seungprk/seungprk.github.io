@@ -11,7 +11,7 @@ class Modal extends React.Component {
   }
 
   componentDidMount() {
-    setTimeout(() => this.setState({ hidden: false }), 3000);
+    this.timeoutId = setTimeout(() => this.setState({ hidden: false }), 3000);
   }
 
   componentDidUpdate(prevProps) {
