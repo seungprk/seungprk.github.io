@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import setup from '../../3d/setup';
 import './CanvasRenderer.css';
 
@@ -13,8 +14,11 @@ class CanvasRenderer extends React.Component {
     this.transition(0);
   }
 
-  componentDidUpdate() {
-    this.transition(this.props.pageNum);
+  componentDidUpdate(prevProps) {
+    const { pageNum } = this.props;
+    if (prevProps.pageNum !== pageNum) {
+      this.transition(pageNum);
+    }
   }
 
   render() {
@@ -23,5 +27,9 @@ class CanvasRenderer extends React.Component {
     );
   }
 }
+
+CanvasRenderer.propTypes = {
+  pageNum: PropTypes.number.isRequired,
+};
 
 export default CanvasRenderer;
