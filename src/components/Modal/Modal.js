@@ -1,4 +1,5 @@
 import React from 'react';
+import { findDOMNode } from 'react-dom';
 import PropTypes from 'prop-types';
 import pages from '../../pages/pages';
 import './Modal.css';
@@ -13,11 +14,20 @@ class Modal extends React.Component {
     setTimeout(() => this.setState({ hidden: false }), 3000);
   }
 
+  componentDidUpdate(prevProps) {
+    const { pageNum } = this.props;
+    if (prevProps.pageNum !== pageNum) {
+      this.setState({ hidden: true }, () => {
+        findDOMNode(this).offsetHeight
+        setTimeout(() => this.setState({ hidden: false }), 3000);
+      });
+    }
+  }
+
   render() {
     const { pageNum } = this.props;
     const { hidden } = this.state;
-    let boxClass = 'Modal__box';
-    boxClass += hidden ? ' Modal__box--hidden' : '';
+    const boxClass = hidden ? 'Modal__box Modal__box--hidden' : 'Modal__box Modal__box--transition';
 
     return (
       <div className="Modal">
