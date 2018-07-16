@@ -9,7 +9,12 @@ class CanvasRenderer extends React.Component {
   }
 
   componentDidMount() {
-    setup(this.canvas.current);
+    this.transition = setup(this.canvas.current);
+    this.transition(0);
+  }
+
+  componentDidUpdate() {
+    this.transition(this.props.pageNum);
   }
 
   render() {

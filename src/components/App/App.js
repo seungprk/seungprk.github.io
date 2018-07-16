@@ -23,25 +23,22 @@ class App extends React.Component {
   }
 
   handleKey(e) {
-    let { pageNum } = this.state;
+    const { pageNum } = this.state;
     const max = pages.length - 1;
 
-    if (e.key === 'ArrowDown') {
-      pageNum = pageNum >= max ? max : pageNum + 1;
-    } else if (e.key === 'ArrowUp') {
-      pageNum = pageNum === 0 ? 0 : pageNum - 1;
+    if (e.key === 'ArrowDown' && pageNum < max) {
+      this.setState({ pageNum: pageNum + 1 });
+    } else if (e.key === 'ArrowUp' && pageNum > 0) {
+      this.setState({ pageNum: pageNum - 1 });
     }
-    this.setState({ pageNum });
   }
 
   render() {
     const { pageNum } = this.state;
     return (
       <div className="App">
-        <Modal>
-          {pages[pageNum]}
-        </Modal>
-        <CanvasRenderer />
+        <Modal pageNum={pageNum} />
+        <CanvasRenderer pageNum={pageNum} />
       </div>
     );
   }

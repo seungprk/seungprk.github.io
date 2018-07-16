@@ -1,20 +1,26 @@
+/* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
+import TWEEN from '@tweenjs/tween.js';
 
-const createSphere = (radius, pos) => {
+const initialCamPos = new THREE.Vector3(0, 100, 100);
+
+const createSphere = (radius, pos, tilt, orbitDuration) => {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);
   const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const sphere = new THREE.Mesh(geometry, material);
   sphere.position.copy(pos);
 
-  const parent = new THREE.Object3D();
+  const parent = new THREE.Group();
   parent.add(sphere);
 
-  return parent;
-};
+  parent.rotation.x = tilt;
 
-const orbit = (sphere, angle, orbitOffsetAngle) => {
-  sphere.rotation.y = angle;
-  sphere.rotation.z = Math.cos(angle) * orbitOffsetAngle;
+  const tween = new TWEEN.Tween(parent.rotation);
+  tween.to({ y: Math.PI * 2 }, orbitDuration)
+    .start()
+    .repeat(Infinity);
+
+  return parent;
 };
 
 const onWindowResize = (camera, renderer) => {
@@ -24,39 +30,94 @@ const onWindowResize = (camera, renderer) => {
 };
 
 const setup = (canvas) => {
+  // Scene, camera, renderer
+  const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
     45,
     window.innerWidth / window.innerHeight,
     1,
     1000,
   );
-  camera.position.z = 100;
-  const scene = new THREE.Scene();
+  camera.position.copy(initialCamPos);
+  camera.lookAt(scene.position);
 
-  const renderer = new THREE.WebGLRenderer({ canvas });
+  const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true });
+  renderer.autoClearColor = false;
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  const sun = createSphere(5, new THREE.Vector3(0, 0, 0));
-  const planet1 = createSphere(1, new THREE.Vector3(15, 0, 0));
-  const planet2 = createSphere(1, new THREE.Vector3(25, 0, 0));
-  const planet3 = createSphere(1, new THREE.Vector3(35, 0, 0));
-  scene.add(sun);
-  scene.add(planet1);
-  scene.add(planet2);
-  scene.add(planet3);
+  // Transparent plane for fading
+  const fadeMaterial = new THREE.MeshBasicMaterial({
+    color: 0x000000,
+    transparent: true,
+    opacity: 0.1,
+  });
+  const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
+  const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
+  fadeMesh.position.z = -1;
+  fadeMesh.renderOrder = -1;
+  camera.add(fadeMesh);
+  scene.add(camera);
 
-  let angle = 0;
-  const animate = () => {
-    requestAnimationFrame(animate);
+  // Add spheres
+  const spheres = [
+    createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0),
+    createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 6, 5000),
+    createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 8, 6000),
+    createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 4, 7000),
+    createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 8, 8000),
+    createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000),
+    createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000),
+  ];
+  spheres.forEach(planet => scene.add(planet));
+
+  // Animation and resize
+  let setCameraPos;
+  let transitionGroup;
+  const animate = (time) => {
+    TWEEN.update(time);
+    if (transitionGroup) transitionGroup.update(time);
+    if (setCameraPos) setCameraPos();
+
     renderer.render(scene, camera);
-    orbit(planet1, angle, Math.PI / 8);
-    orbit(planet2, angle, Math.PI / 16);
-    orbit(planet3, angle, -Math.PI / 10);
-    angle += Math.PI / 360;
+    requestAnimationFrame(animate);
   };
   animate();
 
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
+
+  // Sphere Transition
+  return (sphereIndex) => {
+    setCameraPos = null;
+    if (transitionGroup) transitionGroup.removeAll();
+
+    const sphere = spheres[sphereIndex];
+    const sphereWorldVector = new THREE.Vector3();
+
+    transitionGroup = new TWEEN.Group();
+
+    const followZoom = new TWEEN.Tween(camera.position, transitionGroup);
+    followZoom.easing(TWEEN.Easing.Quadratic.InOut);
+    followZoom.to(sphereWorldVector, 2000)
+      .onUpdate(() => {
+        sphere.children[0].getWorldPosition(sphereWorldVector);
+        sphereWorldVector.z += 10;
+        sphereWorldVector.y += 10;
+      })
+      .onComplete(() => {
+        setCameraPos = () => {
+          sphere.children[0].getWorldPosition(sphereWorldVector);
+          sphereWorldVector.z += 10;
+          sphereWorldVector.y += 10;
+          camera.position.copy(sphereWorldVector);
+        };
+      });
+
+    const showOverview = new TWEEN.Tween(camera.position, transitionGroup);
+    showOverview.easing(TWEEN.Easing.Quadratic.InOut);
+    showOverview.to(initialCamPos, 1000)
+      .chain(followZoom)
+      .start();
+  };
 };
 
 export default setup;
