@@ -14,3 +14,7 @@
   padding: 1rem;
   width: 2rem;
 }
+
+.Arrows__icon--hidden {
+  opacity: 0;
+}
