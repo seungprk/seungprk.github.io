@@ -12,6 +12,7 @@
 
 .Arrows__icon-wrapper {
   margin: 1rem;
+  cursor: pointer;
 }
 
 .Arrows__icon {
