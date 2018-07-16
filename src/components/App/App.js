@@ -37,9 +37,7 @@ class App extends React.Component {
     const { pageNum } = this.state;
     return (
       <div className="App">
-        <Modal>
-          {pages[pageNum]}
-        </Modal>
+        <Modal pageNum={pageNum} />
         <CanvasRenderer pageNum={pageNum} />
       </div>
     );
