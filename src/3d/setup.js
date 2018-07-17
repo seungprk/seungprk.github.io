@@ -61,10 +61,10 @@ const setup = (canvas) => {
   // Add spheres
   const spheres = [
     createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0),
-    createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 6, 5000),
-    createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 8, 6000),
-    createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 4, 7000),
-    createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 8, 8000),
+    createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 32, 5000),
+    createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 32, 6000),
+    createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 32, 7000),
+    createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 32, 8000),
     createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000),
     createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000),
   ];
@@ -100,14 +100,14 @@ const setup = (canvas) => {
     followZoom.to(sphereWorldVector, 2000)
       .onUpdate(() => {
         sphere.children[0].getWorldPosition(sphereWorldVector);
-        sphereWorldVector.z += 10;
-        sphereWorldVector.y += 10;
+        sphereWorldVector.z += 50;
+        sphereWorldVector.y += 50;
       })
       .onComplete(() => {
         setCameraPos = () => {
           sphere.children[0].getWorldPosition(sphereWorldVector);
-          sphereWorldVector.z += 10;
-          sphereWorldVector.y += 10;
+          sphereWorldVector.z += 50;
+          sphereWorldVector.y += 50;
           camera.position.copy(sphereWorldVector);
         };
       });
