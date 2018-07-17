@@ -10,21 +10,21 @@ const Arrows = ({
   handlePageDown,
   handlePageUp,
 }) => {
-  let upWrapClass = 'Arrows__icon-wrapper';
-  let upClass = 'Arrows__icon';
+  let upClass = 'Arrows Arrows--top';
+  let upImgClass = 'Arrows__img';
   let upTabIndex = 0;
   if (pageNum === 0) {
-    upWrapClass += ' Arrows__icon-wrapper--hidden';
-    upClass += ' Arrows__icon--hidden';
+    upClass += ' Arrows--hidden';
+    upImgClass += ' Arrows--hidden';
     upTabIndex = -1;
   }
 
-  let downWrapClass = 'Arrows__icon-wrapper';
-  let downClass = 'Arrows__icon';
+  let downClass = 'Arrows Arrows--bot';
+  let downImgClass = 'Arrows__img';
   let downTabIndex = 0;
   if (pageNum === max) {
-    downWrapClass += ' Arrows__icon-wrapper--hidden';
-    downClass += ' Arrows__icon--hidden';
+    downClass += ' Arrows--hidden';
+    downImgClass += ' Arrows--hidden';
     downTabIndex = -1;
   }
 
@@ -36,24 +36,24 @@ const Arrows = ({
   };
 
   return (
-    <div className="Arrows">
+    <div>
       <div
-        className={upWrapClass}
+        className={upClass}
         onClick={handlePageUp}
         role="button"
         onKeyDown={handleKeyForPageUp}
         tabIndex={upTabIndex}
       >
-        <img className={upClass} src={upIcon} alt="Up" />
+        <img className={upImgClass} src={upIcon} alt="Up" />
       </div>
       <div
-        className={downWrapClass}
+        className={downClass}
         onClick={handlePageDown}
         role="button"
         onKeyDown={handleKeyForPageDown}
         tabIndex={downTabIndex}
       >
-        <img className={downClass} src={downIcon} alt="Down" />
+        <img className={downImgClass} src={downIcon} alt="Down" />
       </div>
     </div>
   );

@@ -1,33 +1,33 @@
 .Arrows {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  position: Absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.Arrows__icon-wrapper {
-  margin: 1rem;
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  left: 50%;
+  margin-left: -1rem;
   cursor: pointer;
+  transition: opacity 1s;
 }
 
-.Arrows__icon-wrapper--hidden {
+.Arrows--top {
+  top: 0.5rem;
+}
+
+.Arrows--bot {
+  top: calc(100% - 2.5rem);
+}
+
+.Arrows--hidden {
   cursor: initial;
+  opacity: 0;
+  transition: opacity 1s;
 }
 
-.Arrows__icon-wrapper--hidden:focus {
+.Arrows--hidden:focus {
   outline: none;
   cursor: initial;
 }
 
-.Arrows__icon {
+.Arrows__img {
   width: 2rem;
-}
-
-.Arrows__icon--hidden {
-  opacity: 0;
+  height: 2rem;
 }
