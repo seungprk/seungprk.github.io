@@ -100,14 +100,14 @@ const setup = (canvas) => {
     followZoom.to(sphereWorldVector, 2000)
       .onUpdate(() => {
         sphere.children[0].getWorldPosition(sphereWorldVector);
-        sphereWorldVector.z += 10;
-        sphereWorldVector.y += 10;
+        sphereWorldVector.z += 50;
+        sphereWorldVector.y += 50;
       })
       .onComplete(() => {
         setCameraPos = () => {
           sphere.children[0].getWorldPosition(sphereWorldVector);
-          sphereWorldVector.z += 10;
-          sphereWorldVector.y += 10;
+          sphereWorldVector.z += 50;
+          sphereWorldVector.y += 50;
           camera.position.copy(sphereWorldVector);
         };
       });
