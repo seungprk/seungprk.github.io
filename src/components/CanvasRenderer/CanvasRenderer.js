@@ -11,7 +11,7 @@ class CanvasRenderer extends React.Component {
 
   componentDidMount() {
     this.transition = setup(this.canvas.current);
-    this.transition(0);
+    // this.transition(0);
   }
 
   componentDidUpdate(prevProps) {

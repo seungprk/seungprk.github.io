@@ -1,8 +1,9 @@
 /* eslint no-param-reassign: 0 */
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
+import PARTICLES from './particleSystem';
 
-const initialCamPos = new THREE.Vector3(0, 100, 100);
+const initialCamPos = new THREE.Vector3(0, 0, 400);
 
 const createSphere = (radius, pos, tilt, orbitDuration) => {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);
@@ -40,23 +41,10 @@ const setup = (canvas) => {
   );
   camera.position.copy(initialCamPos);
   camera.lookAt(scene.position);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true });
-  renderer.autoClearColor = false;
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  // Transparent plane for fading
-  const fadeMaterial = new THREE.MeshBasicMaterial({
-    color: 0x000000,
-    transparent: true,
-    opacity: 0.1,
-  });
-  const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
-  const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
-  fadeMesh.position.z = -1;
-  fadeMesh.renderOrder = -1;
-  camera.add(fadeMesh);
   scene.add(camera);
+
+  const renderer = new THREE.WebGLRenderer({ canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Add spheres
   const spheres = [
@@ -70,6 +58,10 @@ const setup = (canvas) => {
   ];
   spheres.forEach(planet => scene.add(planet));
 
+  // Particle system
+  const particleSystem = PARTICLES.createSystem();
+  scene.add(particleSystem);
+
   // Animation and resize
   let setCameraPos;
   let transitionGroup;
@@ -77,6 +69,8 @@ const setup = (canvas) => {
     TWEEN.update(time);
     if (transitionGroup) transitionGroup.update(time);
     if (setCameraPos) setCameraPos();
+
+    PARTICLES.update(particleSystem);
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
