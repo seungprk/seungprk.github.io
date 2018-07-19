@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import PARTICLES from './particleSystem';
 
-const initialCamPos = new THREE.Vector3(0, 0, 400);
+const initialCamPos = new THREE.Vector3(0, 100, 100);
 
 const createSphere = (radius, pos, tilt, orbitDuration) => {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);

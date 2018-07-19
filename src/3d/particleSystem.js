@@ -1,16 +1,23 @@
 import * as THREE from 'three';
 
-const loadShaders = (vertextUrl, fragmentUrl, onLoad, onProgress, onError) => {
-  const vertexLoader = new THREE.XHRLoader(THREE.DefaultLoadingManager);
-  vertexLoader.setResponseType('text');
-  vertexLoader.load(vertextUrl, (vertexText) => {
-    const fragmentLoader = new THREE.XHRLoader(THREE.DefaultLoadingManager);
-    fragmentLoader.setResponseType('text');
-    fragmentLoader.load(fragmentUrl, (fragmentText) => {
-      onLoad(vertexText, fragmentText);
-    });
-  }, onProgress, onError);
-};
+const vertexShader = `
+  attribute float alpha;
+  varying float vAlpha;
+  void main() {
+    vAlpha = alpha;
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    gl_PointSize = 8.0;
+    gl_Position = projectionMatrix * mvPosition;
+  }
+`;
+
+const fragmentShader = `
+  uniform vec3 color;
+  varying float vAlpha;
+  void main() {
+    gl_FragColor = vec4(color, vAlpha);
+  }
+`;
 
 const update = (particleSystem) => {
   const alphas = particleSystem.geometry.attributes.alpha;
@@ -20,16 +27,26 @@ const update = (particleSystem) => {
     alphas.array[i] *= 0.95;
     if (alphas.array[i] < 0.01) {
       alphas.array[i] = 1.0;
+      const { position } = particleSystem.geometry.attributes;
+      position.array[i * 3] = Math.random() * 20;
+      position.array[i * 3 + 1] = Math.random() * 20;
+      position.array[i * 3 + 2] = Math.random() * 20;
+      position.needsUpdate = true;
     }
   }
-  alphas.needsUpdate = true; // important!
-  particleSystem.rotation.x += 0.005;
-  particleSystem.rotation.y += 0.005;
+  alphas.needsUpdate = true;
 };
 
 const createSystem = () => {
   // point cloud geometry
-  const geometry = new THREE.SphereBufferGeometry(100, 16, 8);
+  // const geometry = new THREE.SphereBufferGeometry(200, 16, 8);
+  const geometry = new THREE.BufferGeometry();
+  const vertices = new Float32Array([
+    -10.0, -10.0,  10.0,
+     10.0, -10.0,  10.0,
+     10.0,  10.0,  10.0,
+  ]);
+  geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
 
   // add an attribute
   const numVertices = geometry.attributes.position.count;
@@ -39,24 +56,24 @@ const createSystem = () => {
     // set alpha randomly
     alphas[i] = Math.random();
   }
-
   geometry.addAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
 
   // uniforms
   const uniforms = {
-    color: { value: new THREE.Color(0xffff00) },
+    color: { value: new THREE.Color(0xffffff) },
   };
 
   // point cloud material
   const shaderMaterial = new THREE.ShaderMaterial({
     uniforms,
-    vertexShader: document.getElementById('vertexshader').textContent,
-    fragmentShader: document.getElementById('fragmentshader').textContent,
+    vertexShader,
+    fragmentShader,
     transparent: true,
   });
 
   // point cloud
   const cloud = new THREE.Points(geometry, shaderMaterial);
+  cloud.update = update;
 
   return cloud;
 };
