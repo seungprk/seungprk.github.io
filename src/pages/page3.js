@@ -13,11 +13,6 @@ const projects = [
     link: 'https://itunes.apple.com/us/app/dashing-dynamics/id1253316480',
   },
   {
-    name: 'Aug Notes',
-    content: 'Mindmaps and notes in 3D (React + Three.js)',
-    link: 'https://github.com/seungprk/aug-notes',
-  },
-  {
     name: 'Crunchly - Proxy Server',
     content: 'Proxy server aggregating UI modules for company data listing web app',
     link: 'https://github.com/crunchly/Proxy-Server-DP',
