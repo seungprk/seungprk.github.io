@@ -5,7 +5,7 @@ import PARTICLES from './particleSystem';
 
 const initialCamPos = new THREE.Vector3(0, 100, 100);
 
-const createSphere = (radius, pos, tilt, orbitDuration) => {
+const createSphere = (radius, pos, tilt, orbitDuration, scene) => {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);
   const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const sphere = new THREE.Mesh(geometry, material);
@@ -20,6 +20,9 @@ const createSphere = (radius, pos, tilt, orbitDuration) => {
   tween.to({ y: Math.PI * 2 }, orbitDuration)
     .start()
     .repeat(Infinity);
+
+  const trail = PARTICLES.createTrail(sphere);
+  scene.add(trail);
 
   return parent;
 };
@@ -48,19 +51,15 @@ const setup = (canvas) => {
 
   // Add spheres
   const spheres = [
-    createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0),
-    createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 32, 5000),
-    createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 32, 6000),
-    createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 32, 7000),
-    createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 32, 8000),
-    createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000),
-    createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000),
+    createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0, scene),
+    createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 32, 5000, scene),
+    createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 32, 6000, scene),
+    createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 32, 7000, scene),
+    createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 32, 8000, scene),
+    createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000, scene),
+    createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000, scene),
   ];
   spheres.forEach(planet => scene.add(planet));
-
-  // Particle system
-  const particleSystem = PARTICLES.createSystem();
-  scene.add(particleSystem);
 
   // Animation and resize
   let setCameraPos;
@@ -70,7 +69,7 @@ const setup = (canvas) => {
     if (transitionGroup) transitionGroup.update(time);
     if (setCameraPos) setCameraPos();
 
-    PARTICLES.update(particleSystem);
+    PARTICLES.update();
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);

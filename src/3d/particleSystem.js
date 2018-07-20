@@ -19,34 +19,44 @@ const fragmentShader = `
   }
 `;
 
-const update = (particleSystem) => {
-  const alphas = particleSystem.geometry.attributes.alpha;
-  const { count } = alphas;
-  for (let i = 0; i < count; i += 1) {
-    // dynamically change alphas
-    alphas.array[i] *= 0.95;
-    if (alphas.array[i] < 0.01) {
-      alphas.array[i] = 1.0;
-      const { position } = particleSystem.geometry.attributes;
-      position.array[i * 3] = Math.random() * 20;
-      position.array[i * 3 + 1] = Math.random() * 20;
-      position.array[i * 3 + 2] = Math.random() * 20;
-      position.needsUpdate = true;
+const createdSystems = [];
+
+const update = () => {
+  const worldPosVector = new THREE.Vector3();
+  createdSystems.forEach((system) => {
+    system.leader.getWorldPosition(worldPosVector);
+    const alphas = system.geometry.attributes.alpha;
+    const { count } = alphas;
+    for (let i = 0; i < count; i += 1) {
+      // dynamically change alphas
+      alphas.array[i] *= 0.95;
+      if (alphas.array[i] < 0.01) {
+        alphas.array[i] = 1.0;
+        const { position } = system.geometry.attributes;
+        position.array[i * 3] = worldPosVector.x;
+        position.array[i * 3 + 1] = worldPosVector.y;
+        position.array[i * 3 + 2] = worldPosVector.z;
+        position.needsUpdate = true;
+      }
     }
-  }
-  alphas.needsUpdate = true;
+    alphas.needsUpdate = true;
+  });
 };
 
-const createSystem = () => {
+const createTrail = (leader) => {
   // point cloud geometry
   // const geometry = new THREE.SphereBufferGeometry(200, 16, 8);
   const geometry = new THREE.BufferGeometry();
-  const vertices = new Float32Array([
-    -10.0, -10.0,  10.0,
-     10.0, -10.0,  10.0,
-     10.0,  10.0,  10.0,
-  ]);
-  geometry.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+  const worldPosVector = new THREE.Vector3();
+  leader.getWorldPosition(worldPosVector);
+
+  const position = new Float32Array(30);
+  for (let i = 0; i < 30; i += 1) {
+    if (i % 3 === 0) position[i] = worldPosVector.x;
+    else if (i % 3 === 1) position[i] = worldPosVector.y;
+    else if (i % 3 === 2) position[i] = worldPosVector.z;
+  }
+  geometry.addAttribute('position', new THREE.BufferAttribute(position, 3));
 
   // add an attribute
   const numVertices = geometry.attributes.position.count;
@@ -73,9 +83,10 @@ const createSystem = () => {
 
   // point cloud
   const cloud = new THREE.Points(geometry, shaderMaterial);
-  cloud.update = update;
+  cloud.leader = leader;
+  createdSystems.push(cloud);
 
   return cloud;
 };
 
-export default { createSystem, update };
+export default { createTrail, update };
