@@ -28,6 +28,7 @@ const createTrail = (leader) => {
   const worldPosVector = new THREE.Vector3();
   leader.getWorldPosition(worldPosVector);
 
+
   const position = new Float32Array(30);
   for (let i = 0; i < 30; i += 1) {
     if (i % 3 === 0) {
@@ -39,7 +40,7 @@ const createTrail = (leader) => {
 
       const tween = new TWEEN.Tween(null);
       tween.to(null, 0)
-        .delay(i / 3 * 50)
+        .delay(10 * 100)
         .onUpdate(() => {
           leader.getWorldPosition(worldPosVector);
           position[startIndex] = worldPosVector.x;
@@ -47,8 +48,12 @@ const createTrail = (leader) => {
           position[startIndex + 2] = worldPosVector.z;
           geometry.attributes.position.needsUpdate = true;
         })
-        .start()
         .repeat(Infinity);
+
+      const startTween = new TWEEN.Tween(null);
+      startTween.to(null, i / 3 * 100)
+        .chain(tween)
+        .start();
     }
   }
   geometry.addAttribute('position', new THREE.BufferAttribute(position, 3));
@@ -58,8 +63,19 @@ const createTrail = (leader) => {
   const alphas = new Float32Array(numVertices * 1); // 1 values per vertex
 
   for (let i = 0; i < numVertices; i += 1) {
-    // set alpha randomly
-    alphas[i] = Math.random();
+    alphas[i] = 1;
+    const startIndex = i;
+    const tween = new TWEEN.Tween(alphas);
+    tween.to({ [startIndex]: 0 }, numVertices * 100)
+      .onUpdate(() => {
+        geometry.attributes.alpha.needsUpdate = true;
+      })
+      .repeat(Infinity);
+
+    const startTween = new TWEEN.Tween(null);
+    startTween.to(null, i * 100)
+      .chain(tween)
+      .start();
   }
   geometry.addAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
 
