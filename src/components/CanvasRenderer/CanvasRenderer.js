@@ -17,7 +17,7 @@ class CanvasRenderer extends React.Component {
   componentDidUpdate(prevProps) {
     const { pageNum } = this.props;
     if (prevProps.pageNum !== pageNum) {
-      this.transition(pageNum);
+      // this.transition(pageNum);
     }
   }
 

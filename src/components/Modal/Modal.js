@@ -20,7 +20,7 @@ class Modal extends React.Component {
       this.setState({ hidden: true }, () => {
         clearTimeout(this.timeoutId);
         findDOMNode(this).offsetHeight;
-        this.timeoutId = setTimeout(() => this.setState({ hidden: false }), 3000);
+        this.timeoutId = setTimeout(() => this.setState({ hidden: false }), 0);
       });
     }
   }
