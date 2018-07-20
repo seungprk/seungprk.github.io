@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import TWEEN from '@tweenjs/tween.js';
 
 const vertexShader = `
   attribute float alpha;
@@ -21,40 +22,34 @@ const fragmentShader = `
 
 const createdSystems = [];
 
-const update = () => {
-  const worldPosVector = new THREE.Vector3();
-  createdSystems.forEach((system) => {
-    system.leader.getWorldPosition(worldPosVector);
-    const alphas = system.geometry.attributes.alpha;
-    const { count } = alphas;
-    for (let i = 0; i < count; i += 1) {
-      // dynamically change alphas
-      alphas.array[i] *= 0.95;
-      if (alphas.array[i] < 0.01) {
-        alphas.array[i] = 1.0;
-        const { position } = system.geometry.attributes;
-        position.array[i * 3] = worldPosVector.x;
-        position.array[i * 3 + 1] = worldPosVector.y;
-        position.array[i * 3 + 2] = worldPosVector.z;
-        position.needsUpdate = true;
-      }
-    }
-    alphas.needsUpdate = true;
-  });
-};
-
 const createTrail = (leader) => {
   // point cloud geometry
-  // const geometry = new THREE.SphereBufferGeometry(200, 16, 8);
   const geometry = new THREE.BufferGeometry();
   const worldPosVector = new THREE.Vector3();
   leader.getWorldPosition(worldPosVector);
 
   const position = new Float32Array(30);
   for (let i = 0; i < 30; i += 1) {
-    if (i % 3 === 0) position[i] = worldPosVector.x;
-    else if (i % 3 === 1) position[i] = worldPosVector.y;
-    else if (i % 3 === 2) position[i] = worldPosVector.z;
+    if (i % 3 === 0) {
+      position[i] = worldPosVector.x;
+      position[i + 1] = worldPosVector.y;
+      position[i + 2] = worldPosVector.z;
+
+      const startIndex = i;
+
+      const tween = new TWEEN.Tween(null);
+      tween.to(null, 0)
+        .delay(i / 3 * 50)
+        .onUpdate(() => {
+          leader.getWorldPosition(worldPosVector);
+          position[startIndex] = worldPosVector.x;
+          position[startIndex + 1] = worldPosVector.y;
+          position[startIndex + 2] = worldPosVector.z;
+          geometry.attributes.position.needsUpdate = true;
+        })
+        .start()
+        .repeat(Infinity);
+    }
   }
   geometry.addAttribute('position', new THREE.BufferAttribute(position, 3));
 
@@ -89,4 +84,4 @@ const createTrail = (leader) => {
   return cloud;
 };
 
-export default { createTrail, update };
+export default { createTrail };

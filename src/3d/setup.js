@@ -69,8 +69,6 @@ const setup = (canvas) => {
     if (transitionGroup) transitionGroup.update(time);
     if (setCameraPos) setCameraPos();
 
-    PARTICLES.update();
-
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
   };
