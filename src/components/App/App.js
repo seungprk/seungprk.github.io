@@ -70,8 +70,8 @@ class App extends React.Component {
     if (Date.now() - timeStamp > 1000) return;
 
     const endY = e.changedTouches[0].clientY;
-    if (y - endY > 20) this.movePageDown();
-    else if (y - endY < -20) this.movePageUp();
+    if (y - endY > 75) this.movePageDown();
+    else if (y - endY < -75) this.movePageUp();
   }
 
   render() {

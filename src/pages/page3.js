@@ -5,12 +5,22 @@ const projects = [
   {
     name: 'CryptoCharts',
     content: 'Dashboard for Cryptocurrencies (React + Redux)',
-    link: 'https://github.com/seungprk/crypto-charts',
+    link: 'http://54.241.138.152',
   },
   {
     name: 'Dashing Dynamics',
     content: 'Infinite runner/platformer game on iOS App Store',
     link: 'https://itunes.apple.com/us/app/dashing-dynamics/id1253316480',
+  },
+  {
+    name: 'Crunchly - Proxy Server',
+    content: 'Proxy server aggregating UI modules for company data listing web app',
+    link: 'https://github.com/crunchly/Proxy-Server-DP',
+  },
+  {
+    name: 'Crunchly - Chart Module',
+    content: 'Chart UI module for company data listing web app',
+    link: 'https://github.com/crunchly/Chart-Module',
   },
 ];
 
