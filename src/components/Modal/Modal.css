@@ -15,9 +15,6 @@
   border: 1px white solid;
   color: white;
   background-color: rgba(0, 0, 0, 0.7);
-}
-
-.Modal__box--transition {
   transition: transform 1s;
 }
 

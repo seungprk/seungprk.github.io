@@ -7,7 +7,10 @@ import './Modal.css';
 class Modal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hidden: true };
+    this.state = {
+      hidden: true,
+      currPage: 0,
+    };
   }
 
   componentDidMount() {
@@ -20,20 +23,22 @@ class Modal extends React.Component {
       this.setState({ hidden: true }, () => {
         clearTimeout(this.timeoutId);
         findDOMNode(this).offsetHeight;
-        this.timeoutId = setTimeout(() => this.setState({ hidden: false }), 3000);
+        this.timeoutId = setTimeout(() => this.setState({
+          hidden: false,
+          currPage: pageNum,
+        }), 3000);
       });
     }
   }
 
   render() {
-    const { pageNum } = this.props;
-    const { hidden } = this.state;
-    const boxClass = hidden ? 'Modal__box Modal__box--hidden' : 'Modal__box Modal__box--transition';
+    const { hidden, currPage } = this.state;
+    const boxClass = hidden ? 'Modal__box Modal__box--hidden' : 'Modal__box';
 
     return (
       <div className="Modal">
         <div className={boxClass}>
-          {pages[pageNum]}
+          {pages[currPage]}
         </div>
       </div>
     );
