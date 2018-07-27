@@ -40,23 +40,10 @@ const setup = (canvas) => {
   );
   camera.position.copy(initialCamPos);
   camera.lookAt(scene.position);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true });
-  renderer.autoClearColor = false;
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  // Transparent plane for fading
-  const fadeMaterial = new THREE.MeshBasicMaterial({
-    color: 0x000000,
-    transparent: true,
-    opacity: 0.1,
-  });
-  const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
-  const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
-  fadeMesh.position.z = -1;
-  fadeMesh.renderOrder = -1;
-  camera.add(fadeMesh);
   scene.add(camera);
+
+  const renderer = new THREE.WebGLRenderer({ canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Add spheres
   const spheres = [
@@ -69,6 +56,13 @@ const setup = (canvas) => {
     createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000),
   ];
   spheres.forEach(planet => scene.add(planet));
+
+  // Grid
+  const groundGeometry = new THREE.PlaneGeometry(100, 100, 10, 10);
+  const groundMaterial = new THREE.MeshBasicMaterial({ wireframe: true, color: 0x00FF00 });
+  const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+  ground.rotation.x = Math.PI / 2;
+  scene.add(ground);
 
   // Animation and resize
   let setCameraPos;
