@@ -65,12 +65,18 @@ const setup = (canvas) => {
   ];
   spheres.forEach(planet => scene.add(planet));
 
-  // Grid
-  // const groundGeometry = new THREE.PlaneGeometry(100, 100, 10, 10);
-  // const groundMaterial = new THREE.MeshBasicMaterial({ wireframe: true, color: 0x00FF00 });
-  // const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-  // ground.rotation.x = Math.PI / 2;
-  // scene.add(ground);
+  // Starfield
+  const starsGeometry = new THREE.Geometry();
+  for (let i = 0; i < 10000; i += 1) {
+    const star = new THREE.Vector3();
+    star.x = THREE.Math.randFloatSpread(1000) + 300;
+    star.y = THREE.Math.randFloatSpread(1000) + 300;
+    star.z = THREE.Math.randFloatSpread(1000) + 300;
+    starsGeometry.vertices.push(star);
+  }
+  const starsMaterial = new THREE.PointsMaterial({ color: 0xAAAAAA });
+  const starField = new THREE.Points(starsGeometry, starsMaterial);
+  scene.add(starField);
 
   // Animation and resize
   let transitionGroup;
