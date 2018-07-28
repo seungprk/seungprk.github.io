@@ -105,7 +105,7 @@ const setup = (canvas) => {
     sphere.children.forEach((child) => {
       const highlight = new TWEEN.Tween(child.material.color, transitionGroup);
       highlight.easing(TWEEN.Easing.Quadratic.InOut);
-      highlight.to({ r: 1, g: 6 / 255, b: 0 }, 2000)
+      highlight.to({ r: 0, g: 122 / 255, b: 1 }, 2000)
         .start();
     });
 
