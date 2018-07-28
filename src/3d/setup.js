@@ -2,21 +2,29 @@
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 
-const initialCamPos = new THREE.Vector3(0, 100, 100);
+const initialCamPos = new THREE.Vector3(0, 70, 70);
+const pageCount = 3;
 
-const createSphere = (radius, pos, tilt, orbitDuration) => {
+const createSphere = (radius, pos, orbitDuration) => {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);
   const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const sphere = new THREE.Mesh(geometry, material);
   sphere.position.copy(pos);
 
-  const parent = new THREE.Group();
-  parent.add(sphere);
+  const vertCount = pos.x * 8;
+  const circleGeometry = new THREE.CircleGeometry(pos.x, vertCount);
+  circleGeometry.vertices.shift();
+  const circleMaterial = new THREE.LineDashedMaterial({ color: 'white' });
+  const circle = new THREE.Line(circleGeometry, circleMaterial);
+  circle.rotation.x = Math.PI / 2;
 
-  parent.rotation.x = tilt;
+  const parent = new THREE.Group();
+  parent.rotation.y = Math.random() * Math.PI * 2;
+  parent.add(sphere);
+  parent.add(circle);
 
   const tween = new TWEEN.Tween(parent.rotation);
-  tween.to({ y: Math.PI * 2 }, orbitDuration)
+  tween.to({ y: parent.rotation.y + Math.PI * 2 }, orbitDuration)
     .start()
     .repeat(Infinity);
 
@@ -40,43 +48,41 @@ const setup = (canvas) => {
   );
   camera.position.copy(initialCamPos);
   camera.lookAt(scene.position);
-
-  const renderer = new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true });
-  renderer.autoClearColor = false;
-  renderer.setSize(window.innerWidth, window.innerHeight);
-
-  // Transparent plane for fading
-  const fadeMaterial = new THREE.MeshBasicMaterial({
-    color: 0x000000,
-    transparent: true,
-    opacity: 0.1,
-  });
-  const fadePlane = new THREE.PlaneBufferGeometry(100, 100);
-  const fadeMesh = new THREE.Mesh(fadePlane, fadeMaterial);
-  fadeMesh.position.z = -1;
-  fadeMesh.renderOrder = -1;
-  camera.add(fadeMesh);
   scene.add(camera);
+
+  const renderer = new THREE.WebGLRenderer({ canvas });
+  renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Add spheres
   const spheres = [
-    createSphere(5, new THREE.Vector3(0, 0, 0), 0, 0),
-    createSphere(1, new THREE.Vector3(15, 0, 0), Math.PI / 32, 5000),
-    createSphere(1, new THREE.Vector3(20, 0, 0), Math.PI / 32, 6000),
-    createSphere(1, new THREE.Vector3(25, 0, 0), -Math.PI / 32, 7000),
-    createSphere(1, new THREE.Vector3(30, 0, 0), -Math.PI / 32, 8000),
-    createSphere(1, new THREE.Vector3(35, 0, 0), 0, 9000),
-    createSphere(1, new THREE.Vector3(40, 0, 0), Math.PI / 32, 10000),
+    createSphere(5, new THREE.Vector3(0, 0, 0), 0),
+    createSphere(1, new THREE.Vector3(10, 0, 0), 10000),
+    createSphere(1, new THREE.Vector3(20, 0, 0), 16000),
+    createSphere(1, new THREE.Vector3(30, 0, 0), 17000),
+    createSphere(1, new THREE.Vector3(40, 0, 0), 18000),
+    createSphere(1, new THREE.Vector3(50, 0, 0), 19000),
+    createSphere(1, new THREE.Vector3(60, 0, 0), 20000),
   ];
   spheres.forEach(planet => scene.add(planet));
 
+  // Starfield
+  const starsGeometry = new THREE.Geometry();
+  for (let i = 0; i < 10000; i += 1) {
+    const star = new THREE.Vector3();
+    star.x = THREE.Math.randFloatSpread(1000) + 300;
+    star.y = THREE.Math.randFloatSpread(1000) + 300;
+    star.z = THREE.Math.randFloatSpread(1000) + 300;
+    starsGeometry.vertices.push(star);
+  }
+  const starsMaterial = new THREE.PointsMaterial({ color: 0xAAAAAA });
+  const starField = new THREE.Points(starsGeometry, starsMaterial);
+  scene.add(starField);
+
   // Animation and resize
-  let setCameraPos;
   let transitionGroup;
   const animate = (time) => {
     TWEEN.update(time);
     if (transitionGroup) transitionGroup.update(time);
-    if (setCameraPos) setCameraPos();
 
     renderer.render(scene, camera);
     requestAnimationFrame(animate);
@@ -86,37 +92,42 @@ const setup = (canvas) => {
   window.addEventListener('resize', () => onWindowResize(camera, renderer), false);
 
   // Sphere Transition
+  let previousSphere = null;
   return (sphereIndex) => {
-    setCameraPos = null;
     if (transitionGroup) transitionGroup.removeAll();
-
-    const sphere = spheres[sphereIndex];
-    const sphereWorldVector = new THREE.Vector3();
-
     transitionGroup = new TWEEN.Group();
 
-    const followZoom = new TWEEN.Tween(camera.position, transitionGroup);
-    followZoom.easing(TWEEN.Easing.Quadratic.InOut);
-    followZoom.to(sphereWorldVector, 2000)
-      .onUpdate(() => {
-        sphere.children[0].getWorldPosition(sphereWorldVector);
-        sphereWorldVector.z += 50;
-        sphereWorldVector.y += 50;
-      })
-      .onComplete(() => {
-        setCameraPos = () => {
-          sphere.children[0].getWorldPosition(sphereWorldVector);
-          sphereWorldVector.z += 50;
-          sphereWorldVector.y += 50;
-          camera.position.copy(sphereWorldVector);
-        };
-      });
+    const indexFactor = (pageCount - sphereIndex) / pageCount;
 
-    const showOverview = new TWEEN.Tween(camera.position, transitionGroup);
-    showOverview.easing(TWEEN.Easing.Quadratic.InOut);
-    showOverview.to(initialCamPos, 1000)
-      .chain(followZoom)
+    const sphere = spheres[sphereIndex];
+    const orbitRadius = sphere.children[0].position.x;
+    const zoom = new TWEEN.Tween(camera.position, transitionGroup);
+    zoom.easing(TWEEN.Easing.Quadratic.InOut);
+    zoom.to({ y: (orbitRadius + 50) * indexFactor, z: orbitRadius + 50 * (sphereIndex / pageCount) }, 3000)
       .start();
+
+    const rotate = new TWEEN.Tween(camera.rotation, transitionGroup);
+    rotate.easing(TWEEN.Easing.Quadratic.InOut);
+    rotate.to({ x: -Math.PI / 2 * indexFactor }, 3000)
+      .start();
+
+    sphere.children.forEach((child) => {
+      const highlight = new TWEEN.Tween(child.material.color, transitionGroup);
+      highlight.easing(TWEEN.Easing.Quadratic.InOut);
+      highlight.to({ r: 0, g: 122 / 255, b: 1 }, 2000)
+        .start();
+    });
+
+    if (previousSphere) {
+      previousSphere.children.forEach((child) => {
+        const highlight = new TWEEN.Tween(child.material.color);
+        highlight.easing(TWEEN.Easing.Quadratic.InOut);
+        highlight.to({ r: 1, g: 1, b: 1 }, 2000)
+          .start();
+      });
+    }
+
+    previousSphere = sphere;
   };
 };
 
