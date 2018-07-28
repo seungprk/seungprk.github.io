@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 
 const initialCamPos = new THREE.Vector3(0, 70, 70);
+const pageCount = 3;
 
 const createSphere = (radius, pos, orbitDuration) => {
   const geometry = new THREE.SphereGeometry(radius, 32, 32);
@@ -90,16 +91,18 @@ const setup = (canvas) => {
     if (transitionGroup) transitionGroup.removeAll();
     transitionGroup = new TWEEN.Group();
 
+    const indexFactor = (pageCount - sphereIndex) / pageCount;
+
     const sphere = spheres[sphereIndex];
     const orbitRadius = sphere.children[0].position.x;
     const zoom = new TWEEN.Tween(camera.position, transitionGroup);
     zoom.easing(TWEEN.Easing.Quadratic.InOut);
-    zoom.to({ y: orbitRadius + 50, z: orbitRadius }, 3000)
+    zoom.to({ y: (orbitRadius + 50) * indexFactor, z: orbitRadius + 50 * (sphereIndex / pageCount) }, 3000)
       .start();
 
     const rotate = new TWEEN.Tween(camera.rotation, transitionGroup);
     rotate.easing(TWEEN.Easing.Quadratic.InOut);
-    rotate.to({ x: -Math.PI / 2 }, 3000)
+    rotate.to({ x: -Math.PI / 2 * indexFactor }, 3000)
       .start();
 
     sphere.children.forEach((child) => {
