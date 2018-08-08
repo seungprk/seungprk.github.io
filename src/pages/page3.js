@@ -8,19 +8,24 @@ const projects = [
     link: 'http://54.241.138.152',
   },
   {
+    name: 'Aug Notes',
+    content: 'Mindmaps and notes in 3D (React + Three.js)',
+    link: 'https://github.com/seungprk/aug-notes',
+  },
+  {
     name: 'Dashing Dynamics',
     content: 'Infinite runner/platformer game on iOS App Store',
     link: 'https://itunes.apple.com/us/app/dashing-dynamics/id1253316480',
   },
   {
-    name: 'Crunchly - Proxy Server',
+    name: 'Crunchly',
     content: 'Proxy server aggregating UI modules for company data listing web app',
     link: 'https://github.com/crunchly/Proxy-Server-DP',
   },
   {
-    name: 'Crunchly - Chart Module',
-    content: 'Chart UI module for company data listing web app',
-    link: 'https://github.com/crunchly/Chart-Module',
+    name: 'Apateez',
+    content: 'Backend of restaurant info web app scaled to service high volume',
+    link: 'https://github.com/Apateez10k/proxy-David',
   },
 ];
 

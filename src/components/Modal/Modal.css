@@ -10,12 +10,15 @@
 }
 
 .Modal__box {
+  box-sizing: border-box;
+  max-height: calc(100vh - 5rem);
   margin: 1rem;
   padding: 2rem;
   border: 1px white solid;
   color: white;
   background-color: rgba(0, 0, 0, 0.7);
   transition: opacity 1s;
+  overflow-y: scroll;
 }
 
 .Modal__box--hidden {
