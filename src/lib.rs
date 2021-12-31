@@ -1,9 +1,11 @@
 mod control;
+mod room;
 
 use three_d::*;
 use wasm_bindgen::prelude::*;
 
 use control::CustomControl;
+use room::Room;
 
 #[wasm_bindgen(start)]
 pub fn start() -> Result<(), JsValue> {
@@ -21,7 +23,7 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
 
     let window = Window::new(WindowSettings {
-        title: "Texture!".to_string(),
+        title: "David's Space".to_string(),
         //max_size: Some((1280, 720)),
         ..Default::default()
     })
@@ -44,17 +46,19 @@ fn main() {
 
     Loader::load(
         &[
-            "assets/skybox/back.jpg",
-            "assets/skybox/front.jpg",
-            "assets/skybox/top.jpg",
-            "assets/skybox/left.jpg",
             "assets/skybox/right.jpg",
+            "assets/skybox/left.jpg",
+            "assets/skybox/up.jpg",
+            "assets/skybox/down.jpg",
+            "assets/skybox/front.jpg",
+            "assets/skybox/back.jpg",
         ],
         move |mut loaded| {
+            // Triangle
             let triangle_pos: Vec<f32> = vec![
-                0.5, -0.5, 0.0, // bottom right
-                -0.5, -0.5, 0.0, // bottom left
-                0.0, 0.5, 0.0, // top
+                0.1, -0.1, 0.0, // bottom right
+                -0.1, -0.1, 0.0, // bottom left
+                0.0, 0.1, 0.0, // top
             ];
             let triangle_colors: Vec<u8> = vec![
                 255, 0, 0, 255, // bottom right
@@ -68,14 +72,25 @@ fn main() {
             };
             let mut triangle = Model::new(&context, &triangle_mesh).unwrap();
 
+            // Room
+            let room = Room::new(
+                &context,
+                ColorMaterial {
+                    color: Color::WHITE,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+
+            // Misc
             let skybox = Skybox::new(
                 &context,
                 &mut loaded
                     .cube_image(
                         "assets/skybox/right.jpg",
                         "assets/skybox/left.jpg",
-                        "assets/skybox/top.jpg",
-                        "assets/skybox/top.jpg",
+                        "assets/skybox/up.jpg",
+                        "assets/skybox/down.jpg",
                         "assets/skybox/front.jpg",
                         "assets/skybox/back.jpg",
                     )
@@ -111,7 +126,7 @@ fn main() {
                         triangle.set_transformation(Mat4::from_angle_y(radians(
                             (frame_input.accumulated_time * 0.001) as f32,
                         )));
-                        pipeline.render_pass(&camera, &[&triangle], &lights)?;
+                        pipeline.render_pass(&camera, &[&room, &triangle], &lights)?;
                         skybox.render(&camera)?;
                         Ok(())
                     })
