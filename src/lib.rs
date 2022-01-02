@@ -79,6 +79,10 @@ fn main() {
                     color: Color::WHITE,
                     ..Default::default()
                 },
+                ColorMaterial {
+                    color: Color::WHITE,
+                    ..Default::default()
+                },
             )
             .unwrap();
 
