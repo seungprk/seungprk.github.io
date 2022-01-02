@@ -34,7 +34,7 @@ fn main() {
     let mut camera = Camera::new_perspective(
         &context,
         window.viewport().unwrap(),
-        vec3(0.0, 0.0, 5.0),
+        vec3(0.0, 0.0, 50.0),
         vec3(0.0, 0.0, 0.0),
         vec3(0.0, 1.0, 0.0),
         degrees(45.0),
@@ -56,9 +56,9 @@ fn main() {
         move |mut loaded| {
             // Triangle
             let triangle_pos: Vec<f32> = vec![
-                0.1, -0.1, 0.0, // bottom right
-                -0.1, -0.1, 0.0, // bottom left
-                0.0, 0.1, 0.0, // top
+                1.0, -1.0, 0.0, // bottom right
+                -1.0, -1.0, 0.0, // bottom left
+                0.0, 1.0, 0.0, // top
             ];
             let triangle_colors: Vec<u8> = vec![
                 255, 0, 0, 255, // bottom right

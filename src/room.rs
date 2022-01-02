@@ -11,8 +11,9 @@ impl<M: ForwardMaterial> Room<M> {
     /// Creates a room object.
     ///
     pub fn new(context: &Context, wireframe_mat: M, floor_mat: M) -> ThreeDResult<Self> {
+        let room_length_scale = Mat4::from_scale(8.0);
         let mut box_mesh = CPUMesh::cube();
-        box_mesh.transform(&Mat4::from_nonuniform_scale(1.0, 0.75, 1.0)); // reduce box height
+        box_mesh.transform(&(room_length_scale * Mat4::from_nonuniform_scale(1.0, 0.5625, 1.0))); // room 16x16x9
 
         let aabb = box_mesh.compute_aabb();
         let max = aabb.max();
@@ -58,6 +59,7 @@ impl<M: ForwardMaterial> Room<M> {
             InstancedModel::new_with_material(context, &transformations, &mesh, wireframe_mat)?;
 
         let mut floor_mesh = CPUMesh::square();
+        floor_mesh.transform(&room_length_scale);
         floor_mesh.transform(&Mat4::from_angle_x(degrees(90.0))); // rotate to be parallel to ground
         floor_mesh.transform(&Mat4::from_translation(vec3(0.0, min.y, 0.0))); // move to bottom of cube
         let floor = Model::new_with_material(context, &floor_mesh, floor_mat)?;
